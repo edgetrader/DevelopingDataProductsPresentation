@@ -15,12 +15,38 @@ knit        : slidify::knit2slides
 
 
 ``` {r initialise, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+if(!is.element('ggplot2', installed.packages()[,1])) {
+    install.packages('ggplot2')
+}
+
+if(!is.element('lubridate', installed.packages()[,1])) {
+    install.packages('lubridate')
+}
+
+if(!is.element('dplyr', installed.packages()[,1])) {
+    install.packages('dplyr')
+}
+
+if(!is.element('reshape2', installed.packages()[,1])) {
+    install.packages('reshape2')
+}
+
+if(!is.element('rCharts', installed.packages()[,1])) {
+    install.packages('rCharts')
+}
+
+if(!is.element('knitr', installed.packages()[,1])) {
+    install.packages('knitr')
+}
+
 library(ggplot2)
 library(lubridate)
 library(dplyr)
 library(reshape2)
 library(rCharts)
 library(knitr)
+
+# Downdowning the data from source
 
 datadir <- "./data"
 datafile <- "resale-flat-prices-based-on-registration-date-from-march-2012-onwards.csv"
@@ -36,13 +62,20 @@ if (!file.exists(datadirfile)) {
     unzip (zipdirfile, exdir = datadir)
 }
 
+
+# Preparing the Data
+
 txnData <- read.csv(datadirfile)
 
 txnData$size <- sapply(strsplit(as.character(txnData$flat_type)," "), function(str) str[[1]])
 txnData[!(txnData$size %in% c(1:5)),'size'] <- 6
 txnData$size <- as.numeric(txnData$size)
 
+## Preparing Data for Slide 2
+
 Data <- txnData %>% group_by(month, flat_type) %>% summarise(avg_price = mean(resale_price), number_of_sales = n())
+
+## Preparing Data for Slide 3
 
 oData <- txnData %>% group_by(town) %>% summarise(countTown = n()) %>% arrange(desc(countTown))
 txnData$town <- factor(txnData$town, levels = oData$town)
@@ -54,7 +87,8 @@ Data$date <- as.Date(Data$date)
 Data$year <- year(Data$date)
 
 
-# For Slide 5 - PSF calculation
+## Preparing Data for Slide 5 - PSF calculation
+
 sqm2sqft <- 10.7639
 
 txnData$floor_area_sqft <- sqm2sqft * txnData$floor_area_sqm
@@ -107,6 +141,8 @@ Lowest number of transaction recorded on Feb 2013 due to government cooling meas
 
 ```{r Slide3, results = 'asis', echo = FALSE, warning = FALSE, message = FALSE, fig.height=6, fig.width=12}
 
+### Drawing the plot for Slide 3 - Total Number of Monthly Sales
+
 ggplot(data=Data, aes(x=month, y=number_of_sales, fill = flat_type)) +
     theme(legend.position="top") +
     geom_bar(stat="identity") +
@@ -123,12 +159,14 @@ ggplot(data=Data, aes(x=month, y=number_of_sales, fill = flat_type)) +
 
 --- .class #id 
 
-### Total of Sales Transactions by Town
+### Total Sales Transactions by Town
 
 Top 3 towns having the most sales transactions:  
 Jurong West, Woodlands and Tampines
 
 ```{r Slide4, results = 'asis', echo = FALSE, warning = FALSE, message = FALSE, fig.height=6, fig.width=12}
+
+### Drawing the plot for Slide 4 - Total Sales Transactions by Town
 
 ggplot(data=townData, aes(x=town, y=number_of_sales, fill=flat_type)) +
     theme(legend.position="top") +
@@ -150,6 +188,8 @@ ggplot(data=townData, aes(x=town, y=number_of_sales, fill=flat_type)) +
 Most expensive public housing flats are found in towns close to city centre.
 
 ```{r Slide5, results = 'asis', echo = FALSE, warning = FALSE, message = FALSE, fig.height=6, fig.width=12}
+
+### Drawing the plot for Slide 5 - Price per sqft in various regions and towns
 
 ggplot(data=psfData, aes(x=town, y=avg_psf, fill = region)) +
     geom_bar(stat="identity", colour = 'black') +
