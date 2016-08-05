@@ -54,7 +54,7 @@ Lowest number of transaction recorded on Feb 2013 due to government cooling meas
 
 --- .class #id 
 
-### Total of Sales Transactions by Town
+### Total Sales Transactions by Town
 
 Top 3 towns having the most sales transactions:  
 Jurong West, Woodlands and Tampines
