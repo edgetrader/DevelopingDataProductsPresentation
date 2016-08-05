@@ -131,7 +131,7 @@ Development Board in Singapore.
 3. This analysis uses all available data in the downloaded data size.  The towns are further classified into regions based on information found on this [website here] (https://data.gov.sg/dataset/master-plan-2014-planning-area-boundary-no-sea).
 4. A more interactive application (ShinyApps) developed to explore the data can be found 
 [here] (https://edgetrader.shinyapps.io/DevelopingDataProductsAssignment/).
-5. All the charts provided in this presentation are generated using R ggplot emebedded in this slidify document.
+5. All the charts provided in this presentation are generated using R ggplot embedded in this slidify document.
 
 --- .class #id 
 
